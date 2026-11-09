@@ -1,0 +1,6 @@
+{
+  "name": "NotiVault - Android Notification Interceptor & Private Inbox",
+  "description": "Native Android app in Jetpack Compose, Room, and NotificationListenerService with full source code export, interactive mobile simulator, and installation guide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
