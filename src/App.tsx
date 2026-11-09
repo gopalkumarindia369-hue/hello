@@ -19,12 +19,14 @@ import {
 import { PhoneSimulator } from './components/PhoneSimulator';
 import { CodeExplorer } from './components/CodeExplorer';
 import { BuildGuide } from './components/BuildGuide';
+import { GithubPushModal } from './components/GithubPushModal';
 import { generateProjectZip, downloadBlob } from './utils/zipGenerator';
 
 export default function App() {
   const [activeView, setActiveView] = useState<'simulator' | 'code' | 'guide'>('simulator');
   const [isZipping, setIsZipping] = useState(false);
   const [showInstallModal, setShowInstallModal] = useState(false);
+  const [showGithubModal, setShowGithubModal] = useState(false);
 
   const handleDownloadFullZip = async () => {
     try {
@@ -82,11 +84,19 @@ export default function App() {
           {/* Zone 3: Actions */}
           <div className="flex items-center gap-2.5 shrink-0">
             <button
+              onClick={() => setShowGithubModal(true)}
+              className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-800 border border-slate-700 rounded-xl hover:bg-slate-700 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 shadow-sm"
+            >
+              <GitBranch className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Push to GitHub</span>
+            </button>
+
+            <button
               onClick={() => setShowInstallModal(true)}
               className="px-3.5 py-2 text-xs font-semibold text-indigo-300 bg-indigo-950/70 border border-indigo-700/60 rounded-xl hover:bg-indigo-900/50 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5"
             >
               <Smartphone className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Install on My Phone</span>
+              <span>Install on Phone</span>
             </button>
 
             <button
@@ -95,7 +105,7 @@ export default function App() {
               className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-500 transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 shadow-lg shadow-indigo-600/20 disabled:opacity-50"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>{isZipping ? 'Bundling...' : 'Download Project .ZIP'}</span>
+              <span>{isZipping ? 'Bundling...' : 'Download .ZIP'}</span>
             </button>
           </div>
         </div>
@@ -272,25 +282,44 @@ export default function App() {
             </div>
 
             {/* Final Actions */}
-            <div className="pt-2 flex items-center justify-between gap-3 border-t border-slate-800">
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800">
               <button
-                onClick={() => setShowInstallModal(false)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium transition-colors"
+                onClick={() => {
+                  setShowInstallModal(false);
+                  setShowGithubModal(true);
+                }}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-lg shadow-indigo-600/30"
               >
-                Close
+                <GitBranch className="w-4 h-4" />
+                <span>Push Directly to GitHub</span>
               </button>
-              <button
-                onClick={handleDownloadFullZip}
-                disabled={isZipping}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors shadow-lg shadow-indigo-600/30"
-              >
-                <Download className="w-4 h-4" />
-                <span>{isZipping ? 'Packaging...' : 'Download Project .ZIP Now'}</span>
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowInstallModal(false)}
+                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={handleDownloadFullZip}
+                  disabled={isZipping}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>{isZipping ? 'Packaging...' : 'Download .ZIP'}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* 1-Click Push to GitHub Modal */}
+      <GithubPushModal
+        isOpen={showGithubModal}
+        onClose={() => setShowGithubModal(false)}
+      />
     </div>
   );
 }
